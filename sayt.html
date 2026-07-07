@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEXTION — darknet portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #c0c0c0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        a {
+            color: #00ffc8;
+            text-decoration: none;
+        }
+
+        /* ШАПКА */
+        header {
+            background: rgba(10, 10, 10, 0.92);
+            border-bottom: 1px solid rgba(0, 255, 200, 0.1);
+            padding: 14px 0;
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+        }
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            color: #00ffc8;
+        }
+        .logo span {
+            color: #fff;
+        }
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+        }
+        nav button {
+            background: transparent;
+            border: 1px solid rgba(0, 255, 200, 0.06);
+            color: #7a8ba3;
+            padding: 8px 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.25s;
+            border-radius: 4px;
+        }
+        nav button:hover {
+            color: #fff;
+            border-color: rgba(0, 255, 200, 0.25);
+        }
+        nav button.active {
+            color: #00ffc8;
+            border-color: #00ffc8;
+        }
+
+        /* БАННЕР */
+        .banner {
+            width: 100%;
+            max-height: 55vh;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            border-bottom: 1px solid rgba(0, 255, 200, 0.05);
+        }
+        .banner img {
+            width: 100%;
+            height: auto;
+            max-height: 55vh;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.65) contrast(1.05);
+        }
+        .banner .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 60px 40px 30px;
+            background: linear-gradient(0deg, rgba(10, 10, 10, 0.9) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        .banner .overlay h1 {
+            font-size: 36px;
+            color: #fff;
+        }
+        .banner .overlay h1 span {
+            color: #00ffc8;
+        }
+        .banner .overlay p {
+            color: #7a8ba3;
+            font-size: 14px;
+        }
+
+        /* СТРАНИЦЫ */
+        .page {
+            display: none;
+            padding: 40px 0 60px;
+            animation: fadeIn 0.4s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-title {
+            font-size: 32px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .page-title span {
+            color: #00ffc8;
+        }
+        .page-sub {
+            color: #5a6a7a;
+            font-size: 14px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        /* СЧЁТЧИКИ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .stats-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 200, 0.04);
+            border-radius: 6px;
+            padding: 16px 12px;
+            text-align: center;
+        }
+        .stats-card .num {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00ffc8;
+        }
+        .stats-card .label {
+            font-size: 11px;
+            color: #5a6a7a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        /* НОВОСТИ */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .news-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 200, 0.04);
+            border-radius: 6px;
+            padding: 20px;
+        }
+        .news-card .tag {
+            font-size: 10px;
+            color: #00ffc8;
+            background: rgba(0, 255, 200, 0.06);
+            padding: 2px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .news-card h3 {
+            color: #fff;
+            font-size: 18px;
+            margin: 10px 0 6px;
+        }
+        .news-card p {
+            color: #7a8ba3;
+            font-size: 14px;
+        }
+        .news-card .date {
+            font-size: 11px;
+            color: #3a4a5a;
+            margin-top: 12px;
+            display: block;
+        }
+
+        /* РАЗРАБОТЧИКИ */
+        .dev-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+        }
+        .dev-card {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 255, 200, 0.04);
+            border-radius: 6px;
+            padding: 20px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .dev-card:hover {
+            border-color: rgba(0, 255, 200, 0.2);
+            transform: scale(1.02);
+        }
+        .dev-card .avatar {
+            font-size: 40px;
+        }
+        .dev-card .nick {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .dev-card .role {
+            font-size: 12px;
+            color: #5a6a7a;
+        }
+        .dev-card .status {
+            font-size: 10px;
+            color: #00ffc8;
+            margin-top: 6px;
+            display: inline-block;
+            border: 1px solid rgba(0, 255, 200, 0.1);
+            padding: 0 12px;
+            border-radius: 20px;
+        }
+
+        /* ТОВАРЫ */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 200, 0.04);
+            border-radius: 6px;
+            padding: 24px 18px;
+            text-align: center;
+        }
+        .product-card .icon {
+            font-size: 36px;
+        }
+        .product-card h3 {
+            color: #fff;
+            font-size: 18px;
+        }
+        .product-card .desc {
+            color: #7a8ba3;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 8px 0 10px;
+        }
+        .product-card .details {
+            font-size: 12px;
+            color: #5a6a7a;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            padding-top: 10px;
+        }
+        .product-card .price {
+            color: #00ffc8;
+            font-weight: 700;
+            font-size: 16px;
+            display: block;
+            margin-top: 8px;
+        }
+
+        /* ФОРМЫ */
+        .form-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 200, 0.04);
+            border-radius: 6px;
+            padding: 28px 24px;
+            max-width: 520px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #5a6a7a;
+            margin-bottom: 4px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 4px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: rgba(0, 255, 200, 0.2);
+        }
+        .btn {
+            padding: 10px 30px;
+            background: transparent;
+            border: 1px solid #00ffc8;
+            color: #00ffc8;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.25s;
+        }
+        .btn:hover {
+            background: rgba(0, 255, 200, 0.04);
+        }
+
+        /* МОДАЛКА */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.open {
+            display: flex;
+        }
+        .modal {
+            background: #0e0e0e;
+            border: 1px solid rgba(0, 255, 200, 0.08);
+            border-radius: 8px;
+            max-width: 460px;
+            width: 90%;
+            padding: 28px 24px;
+            position: relative;
+        }
+        .modal .close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 24px;
+            color: #5a6a7a;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .modal .close:hover {
+            color: #fff;
+        }
+        .modal .dev-avatar {
+            font-size: 48px;
+            text-align: center;
+        }
+        .modal .dev-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+        }
+        .modal .dev-role {
+            text-align: center;
+            color: #00ffc8;
+            font-size: 14px;
+        }
+        .modal .dev-experience {
+            text-align: center;
+            font-size: 13px;
+            color: #7a8ba3;
+        }
+        .modal .dev-desc {
+            color: #aabbcc;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 12px 0;
+        }
+        .modal .dev-projects {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .modal .dev-projects span {
+            background: rgba(0, 255, 200, 0.04);
+            border: 1px solid rgba(0, 255, 200, 0.04);
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #5a6a7a;
+        }
+        .modal .dev-contact a {
+            color: #00ffc8;
+            font-size: 13px;
+            border: 1px solid rgba(0, 255, 200, 0.06);
+            padding: 4px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* ФУТЕР */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            padding: 24px 0;
+            text-align: center;
+            color: #3a4a5a;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+        footer a {
+            color: #5a6a7a;
+        }
+        footer a:hover {
+            color: #00ffc8;
+        }
+
+        /* АДАПТИВ */
+        @media (max-width: 700px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            nav {
+                justify-content: center;
+            }
+            nav button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            .page-title {
+                font-size: 26px;
+            }
+            .banner .overlay h1 {
+                font-size: 22px;
+            }
+            .banner .overlay p {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ШАПКА -->
+    <header>
+        <div class="container header-inner">
+            <div class="logo">⚡ <span>NEXTION</span></div>
+            <nav id="mainNav">
+                <button class="active" data-page="news">📰 Новости</button>
+                <button data-page="devs">🧑‍💻 Разработчики</button>
+                <button data-page="products">🛒 Товары</button>
+                <button data-page="order">📦 Заказать</button>
+                <button data-page="join">🤝 В команду</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- БАННЕР -->
+    <div class="banner" style="position:relative;">
+        <img src="banner.jpg" alt="NEXTION Баннер" style="width:100%; max-height:55vh; object-fit:cover;" />
+        <div class="overlay">
+            <h1>⚡ <span>NEXTION</span> LAB</h1>
+            <p>КИБЕРБЕЗОПАСНОСТЬ · RAT · ИИ · АНДРОИД</p>
+        </div>
+    </div>
+
+    <!-- СЧЁТЧИКИ -->
+    <div class="container" style="position:relative; z-index:5;">
+        <div class="stats-grid">
+            <div class="stats-card"><div class="num" id="statAgents">42</div><div class="label">Агентов подключено</div></div>
+            <div class="stats-card"><div class="num" id="statCommands">1234</div><div class="label">Команд выполнено</div></div>
+            <div class="stats-card"><div class="num" id="statProjects">7</div><div class="label">Активных проектов</div></div>
+            <div class="stats-card"><div class="num">6</div><div class="label">В команде</div></div>
+        </div>
+    </div>
+
+    <!-- СТРАНИЦЫ -->
+    <div id="page-news" class="page active">
+        <div class="container">
+            <div class="page-title">📰 <span>Новости</span> NEXTION</div>
+            <div class="page-sub">// последние обновления портала</div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <span class="tag">Обновление</span>
+                    <h3>NEXTION RAT v9.0</h3>
+                    <p>Добавлены DoS-атака и СМС-бомбер.</p>
+                    <span class="date">08.07.2026</span>
+                </div>
+                <div class="news-card">
+                    <span class="tag">Команда</span>
+                    <h3>Сформирован состав</h3>
+                    <p>6 разработчиков: Python, C++, Android, Assembler, Web, Лидер.</p>
+                    <span class="date">06.07.2026</span>
+                </div>
+                <div class="news-card">
+                    <span class="tag">Инфраструктура</span>
+                    <h3>Открыт портал</h3>
+                    <p>Запущен официальный сайт NEXTION.</p>
+                    <span class="date">05.07.2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-devs" class="page">
+        <div class="container">
+            <div class="page-title">🧑‍💻 <span>Разработчики</span> команды</div>
+            <div class="page-sub">// нажми на карточку для полной информации</div>
+            <div class="dev-grid" id="devGrid"></div>
+        </div>
+    </div>
+
+    <div id="page-products" class="page">
+        <div class="container">
+            <div class="page-title">🛒 <span>Товары</span> и услуги</div>
+            <div class="page-sub">// каталог доступных продуктов</div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="icon">💀</div>
+                    <h3>NEXTION RAT</h3>
+                    <div class="desc">RAT-фреймворк для удалённого управления Windows.</div>
+                    <div class="details">🔹 Telegram бот<br>🔹 40+ команд<br>🔹 DoS-атака</div>
+                    <span class="price">от $100</span>
+                </div>
+                <div class="product-card">
+                    <div class="icon">📱</div>
+                    <h3>Android-агент</h3>
+                    <div class="desc">Скрытый агент: камера, GPS, микрофон.</div>
+                    <div class="details">🔹 Камера<br>🔹 GPS<br>🔹 Фоновый режим</div>
+                    <span class="price">от $80</span>
+                </div>
+                <div class="product-card">
+                    <div class="icon">🛡️</div>
+                    <h3>DoS-инструмент</h3>
+                    <div class="desc">Стресс-тестирование серверов.</div>
+                    <div class="details">🔹 HTTP/UDP Flood<br>🔹 Настраиваемые потоки</div>
+                    <span class="price">от $50</span>
+                </div>
+                <div class="product-card">
+                    <div class="icon">🧠</div>
+                    <h3>BLEAK AI</h3>
+                    <div class="desc">Голосовой ИИ-помощник для ПК.</div>
+                    <div class="details">🔹 Голосовое управление<br>🔹 Нейросеть (Groq)</div>
+                    <span class="price">от $60</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-order" class="page">
+        <div class="container">
+            <div class="page-title">📦 <span>Заказать</span> продукт</div>
+            <div class="page-sub">// оставь заявку — мы свяжемся</div>
+            <div class="form-card">
+                <form id="orderForm">
+                    <div class="form-group">
+                        <label>Имя / Ник</label>
+                        <input type="text" id="orderName" placeholder="твой ник" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Telegram / Почта</label>
+                        <input type="text" id="orderContact" placeholder="@username или email" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Продукт</label>
+                        <select id="orderProduct">
+                            <option>NEXTION RAT</option>
+                            <option>Android-агент</option>
+                            <option>DoS-инструмент</option>
+                            <option>BLEAK AI</option>
+                            <option>Другое</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Комментарий</label>
+                        <textarea id="orderComment" placeholder="дополнительная информация..."></textarea>
+                    </div>
+                    <button type="submit" class="btn">✅ Отправить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-join" class="page">
+        <div class="container">
+            <div class="page-title">🤝 <span>Вступить</span> в команду</div>
+            <div class="page-sub">// заполни анкету</div>
+            <div class="form-card">
+                <form id="joinForm">
+                    <div class="form-group">
+                        <label>Имя / Ник</label>
+                        <input type="text" id="joinName" placeholder="твой ник" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Telegram</label>
+                        <input type="text" id="joinTg" placeholder="@username" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Направление</label>
+                        <select id="joinDirection">
+                            <option>Python</option>
+                            <option>C++</option>
+                            <option>Android</option>
+                            <option>Assembler</option>
+                            <option>Web</option>
+                            <option>OSINT</option>
+                            <option>Другое</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Опыт / Проекты</label>
+                        <textarea id="joinExp" placeholder="расскажи о себе..." rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn">🚀 Отправить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА -->
+    <div class="modal-overlay" id="devModal">
+        <div class="modal">
+            <button class="close" id="modalClose">✕</button>
+            <div class="dev-avatar" id="modalAvatar">🧠</div>
+            <div class="dev-name" id="modalName">BLEAK</div>
+            <div class="dev-role" id="modalRole">Лидер / Assembler</div>
+            <div class="dev-experience" id="modalExperience">⚡ Опыт: 7+ лет</div>
+            <div class="dev-desc" id="modalDesc">Архитектор проектов, реверс-инжиниринг, анализ защит.</div>
+            <div class="dev-projects" id="modalProjects"></div>
+            <div class="dev-contact">
+                <a href="https://t.me/Bleeaak" target="_blank">Telegram</a>
+                <a href="https://github.com/NEXXTION" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ФУТЕР -->
+    <footer>
+        <div class="container">
+            <p>⚡ NEXTION &bull; 2026 &bull; закрытый портал</p>
+            <p style="margin-top:4px; font-size:12px;">
+                <a href="https://t.me/nextion_team" target="_blank">Telegram канал</a> &bull;
+                <a href="https://github.com/NEXXTION" target="_blank">GitHub</a> &bull;
+                <a href="mailto:NEXTIONorg@gmail.com">Email</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================
+        // РАЗРАБОТЧИКИ (ДАННЫЕ)
+        // ============================
+        const developers = [{
+            id: 'bleak',
+            name: 'BLEAK',
+            avatar: '🧠',
+            role: 'Основатель / Архитектор / Лидер',
+            experience: '⚡ Опыт: 7+ лет',
+            desc: 'Полный стек: Assembler, Python, C++, Android, Web. Архитектор всех проектов NEXTION.',
+            projects: ['NEXTION RAT', 'DoS Engine', 'BLEAK AI', 'Android Agent', 'NEXTION Portal']
+        }, {
+            id: 'indi',
+            name: 'INDI',
+            avatar: '🐍',
+            role: 'Python разработчик',
+            experience: '⚡ Опыт: 4 года',
+            desc: 'Telegram-боты, автоматизация, OSINT, парсинг, бэкенд.',
+            projects: ['Telegram Bot API', 'OSINT Tools', 'Data Parser']
+        }, {
+            id: 'n',
+            name: 'N!',
+            avatar: '🐍',
+            role: 'Python разработчик',
+            experience: '⚡ Опыт: 3 года',
+            desc: 'Скрипты для анализа данных, автоматизация сбора информации.',
+            projects: ['Data Parser', 'AutoCollector', 'Web Scraper']
+        }, {
+            id: 'sss',
+            name: 'SSS',
+            avatar: '⚙️',
+            role: 'C++ разработчик',
+            experience: '⚡ Опыт: 5 лет',
+            desc: 'Драйверы Windows, руткиты, обход антивирусов.',
+            projects: ['Rootkit Engine', 'Driver Framework', 'System Utilities']
+        }, {
+            id: 'kent',
+            name: 'KENT',
+            avatar: '📱',
+            role: 'Android разработчик',
+            experience: '⚡ Опыт: 4 года',
+            desc: 'Мобильные агенты, скрытые сервисы, сборка APK.',
+            projects: ['Android Agent', 'APK Builder', 'Mobile Framework']
+        }, {
+            id: 'xtrim',
+            name: 'Xtrim',
+            avatar: '🌐',
+            role: 'Web разработчик',
+            experience: '⚡ Опыт: 3 года',
+            desc: 'Панели управления, дашборды, REST API.',
+            projects: ['NEXTION Panel', 'API Gateway', 'Web Dashboard']
+        }];
+
+        // ============================
+        // ОТРИСОВКА КАРТОЧЕК
+        // ============================
+        const grid = document.getElementById('devGrid');
+        developers.forEach(dev => {
+            const card = document.createElement('div');
+            card.className = 'dev-card';
+            card.innerHTML = `
+                <div class="avatar">${dev.avatar}</div>
+                <div class="nick">${dev.name}</div>
+                <div class="role">${dev.role}</div>
+                <div class="status">● активен</div>
+            `;
+            card.addEventListener('click', () => openModal(dev));
+            grid.appendChild(card);
+        });
+
+        // ============================
+        // МОДАЛКА
+        // ============================
+        const modal = document.getElementById('devModal');
+        const modalClose = document.getElementById('modalClose');
+
+        function openModal(dev) {
+            document.getElementById('modalAvatar').textContent = dev.avatar;
+            document.getElementById('modalName').textContent = dev.name;
+            document.getElementById('modalRole').textContent = dev.role;
+            document.getElementById('modalExperience').textContent = dev.experience;
+            document.getElementById('modalDesc').textContent = dev.desc;
+            const projectsContainer = document.getElementById('modalProjects');
+            projectsContainer.innerHTML = '';
+            dev.projects.forEach(p => {
+                const span = document.createElement('span');
+                span.textContent = p;
+                projectsContainer.appendChild(span);
+            });
+            modal.classList.add('open');
+        }
+
+        modalClose.addEventListener('click', () => modal.classList.remove('open'));
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('open');
+        });
+
+        // ============================
+        // НАВИГАЦИЯ
+        // ============================
+        document.querySelectorAll('#mainNav button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#mainNav button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const pageId = btn.dataset.page;
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                const targetPage = document.getElementById(`page-${pageId}`);
+                if (targetPage) targetPage.classList.add('active');
+            });
+        });
+
+        // ============================
+        // ОТПРАВКА В TELEGRAM (100% РАБОТАЕТ)
+        // ============================
+        const BOT_TOKEN = "8944686785:AAFSFQia4B3pczXaxaRzh_8QGDYGFGkvFUQ";
+        const CHAT_ID = "7121055768";
+
+        async function sendToTelegram(text) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+                });
+                return response.ok;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Форма заказа
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('orderName').value;
+            const contact = document.getElementById('orderContact').value;
+            const product = document.getElementById('orderProduct').value;
+            const comment = document.getElementById('orderComment').value;
+
+            const message =
+                `📦 НОВЫЙ ЗАКАЗ\n\n👤 Имя: ${name}\n📱 Контакт: ${contact}\n🛒 Товар: ${product}\n💬 Комментарий: ${comment}`;
+
+            const ok = await sendToTelegram(message);
+            alert(ok ? '✅ Заявка отправлена! Мы свяжемся с тобой.' : '❌ Ошибка отправки. Попробуй позже.');
+            if (ok) e.target.reset();
+        });
+
+        // Форма вступления
+        document.getElementById('joinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('joinName').value;
+            const tg = document.getElementById('joinTg').value;
+            const direction = document.getElementById('joinDirection').value;
+            const exp = document.getElementById('joinExp').value;
+
+            const message =
+                `🤝 НОВАЯ ЗАЯВКА В КОМАНДУ\n\n👤 Имя: ${name}\n📱 Telegram: ${tg}\n📌 Направление: ${direction}\n📝 Опыт: ${exp}`;
+
+            const ok = await sendToTelegram(message);
+            alert(ok ? '🚀 Заявка отправлена! Мы рассмотрим её.' : '❌ Ошибка отправки. Попробуй позже.');
+            if (ok) e.target.reset();
+        });
+    </script>
+
+</body>
+</html>
