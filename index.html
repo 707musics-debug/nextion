@@ -790,7 +790,7 @@
         }
 
         /* ============================
-           ТЕРМИНАЛ
+           ТЕРМИНАЛ (ИСПРАВЛЕННЫЙ)
         ============================ */
         .live-terminal {
             position: fixed;
@@ -798,26 +798,27 @@
             left: 0;
             right: 0;
             z-index: 20;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
             border-top: 1px solid rgba(0, 255, 200, 0.04);
-            padding: 8px 20px;
-            font-size: 12px;
+            padding: 6px 20px;
+            font-size: 11px;
             color: #5a6a7a;
             font-family: 'Courier New', monospace;
-            max-height: 60px;
+            max-height: 40px;
             overflow: hidden;
             transition: max-height 0.3s ease;
             cursor: pointer;
+            pointer-events: auto;
         }
 
         .live-terminal:hover {
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
         }
 
         .live-terminal .line {
-            padding: 2px 0;
+            padding: 1px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
 
@@ -831,60 +832,13 @@
         }
 
         /* ============================
-           FAQ (СКРЫТ, НО МОЖНО РАСКОММЕНТИРОВАТЬ)
-        ============================ */
-        .faq-item {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(0, 255, 200, 0.03);
-            border-radius: 6px;
-            padding: 16px 20px;
-            margin-bottom: 10px;
-        }
-
-        .faq-item .q {
-            color: #ffffff;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .faq-item .q .arrow {
-            color: #5a6a7a;
-            transition: 0.25s;
-        }
-
-        .faq-item .q .arrow.open {
-            transform: rotate(180deg);
-        }
-
-        .faq-item .a {
-            color: #7a8ba3;
-            font-size: 14px;
-            margin-top: 8px;
-            display: none;
-        }
-
-        .faq-item .a.open {
-            display: block;
-        }
-
-        /* ============================
-           ЗВУК (HACKER CLICK)
-        ============================ */
-        .click-sound {
-            display: none;
-        }
-
-        /* ============================
-           ФУТЕР
+           ФУТЕР (С ОТСТУПОМ)
         ============================ */
         footer {
             position: relative;
             z-index: 5;
             border-top: 1px solid rgba(255, 255, 255, 0.02);
-            padding: 24px 0;
+            padding: 20px 0 60px;
             text-align: center;
             color: #3a4a5a;
             font-size: 13px;
@@ -933,7 +887,7 @@
             }
             .live-terminal {
                 font-size: 10px;
-                max-height: 40px;
+                max-height: 36px;
                 padding: 4px 12px;
             }
             .live-terminal:hover {
@@ -1184,25 +1138,7 @@
     </div>
 
     <!-- ============================
-    FAQ (СКРЫТ, НО МОЖНО РАСКОММЕНТИРОВАТЬ)
-    ============================ -->
-    <!--
-    <div class="container" style="position:relative; z-index:5; padding: 0 20px 60px;">
-        <div class="page-title">❓ <span>FAQ</span></div>
-        <div class="page-sub">// частые вопросы</div>
-        <div class="faq-item">
-            <div class="q">Что такое NEXTION RAT? <span class="arrow">▼</span></div>
-            <div class="a">NEXTION RAT — это фреймворк для удалённого управления Windows-системами через Telegram.</div>
-        </div>
-        <div class="faq-item">
-            <div class="q">Сколько стоит? <span class="arrow">▼</span></div>
-            <div class="a">Цены указаны в разделе "Товары".</div>
-        </div>
-    </div>
-    -->
-
-    <!-- ============================
-    ТЕРМИНАЛ
+    ТЕРМИНАЛ (ЖИВОЙ ЛОГ)
     ============================ -->
     <div class="live-terminal" id="liveTerminal">
         <div class="line"><span class="time">[00:00:00]</span> <span class="highlight">NEXTION</span> система инициализирована</div>
@@ -1218,7 +1154,7 @@
     </audio>
 
     <!-- ============================
-    ФУТЕР
+    ФУТЕР (ТЕПЕРЬ ВИДЕН)
     ============================ -->
     <footer>
         <div class="container">
