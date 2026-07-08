@@ -27,8 +27,30 @@
             text-decoration: none;
         }
 
+        /* ============================
+           АНИМИРОВАННЫЙ ФОН (МАТРИЦА)
+        ============================ */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.12;
+            overflow: hidden;
+        }
+        #matrix-bg canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
         /* ШАПКА */
         header {
+            position: relative;
+            z-index: 10;
             background: rgba(10, 10, 10, 0.92);
             border-bottom: 1px solid rgba(0, 255, 200, 0.1);
             padding: 14px 0;
@@ -75,6 +97,8 @@
 
         /* БАННЕР */
         .banner {
+            position: relative;
+            z-index: 5;
             width: 100%;
             max-height: 55vh;
             overflow: hidden;
@@ -423,6 +447,41 @@
             margin-right: 8px;
         }
 
+        /* ТЕРМИНАЛ */
+        .live-terminal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(0, 255, 200, 0.04);
+            padding: 8px 20px;
+            font-size: 12px;
+            color: #5a6a7a;
+            font-family: 'Courier New', monospace;
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            cursor: pointer;
+        }
+        .live-terminal:hover {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .live-terminal .line {
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+        .live-terminal .line .time {
+            color: #3a4a5a;
+            margin-right: 12px;
+        }
+        .live-terminal .line .highlight {
+            color: #00ffc8;
+        }
+
         /* ФУТЕР */
         footer {
             border-top: 1px solid rgba(255, 255, 255, 0.02);
@@ -439,7 +498,6 @@
             color: #00ffc8;
         }
 
-        /* АДАПТИВ */
         @media (max-width: 700px) {
             .header-inner {
                 flex-direction: column;
@@ -467,6 +525,11 @@
 </head>
 <body>
 
+    <!-- МАТРИЦА -->
+    <div id="matrix-bg">
+        <canvas id="matrixCanvas"></canvas>
+    </div>
+
     <!-- ШАПКА -->
     <header>
         <div class="container header-inner">
@@ -482,8 +545,8 @@
     </header>
 
     <!-- БАННЕР -->
-    <div class="banner" style="position:relative;">
-        <img src="banner.jpg" alt="NEXTION Баннер" style="width:100%; max-height:55vh; object-fit:cover;" />
+    <div class="banner">
+        <img src="banner.jpg" alt="NEXTION Баннер" />
         <div class="overlay">
             <h1>⚡ <span>NEXTION</span> LAB</h1>
             <p>КИБЕРБЕЗОПАСНОСТЬ · RAT · ИИ · АНДРОИД</p>
@@ -660,6 +723,13 @@
         </div>
     </div>
 
+    <!-- ТЕРМИНАЛ -->
+    <div class="live-terminal" id="liveTerminal">
+        <div class="line"><span class="time">[00:00:00]</span> <span class="highlight">NEXTION</span> система инициализирована</div>
+        <div class="line"><span class="time">[00:00:01]</span> Подключение к базе данных агентов...</div>
+        <div class="line"><span class="time">[00:00:02]</span> <span class="highlight">✅</span> Установлено соединение с сервером</div>
+    </div>
+
     <!-- ФУТЕР -->
     <footer>
         <div class="container">
@@ -674,7 +744,44 @@
 
     <script>
         // ============================
-        // РАЗРАБОТЧИКИ (ДАННЫЕ)
+        // МАТРИЦА
+        // ============================
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:<>?';
+        const columns = Math.floor(canvas.width / 16);
+        const drops = [];
+        for (let i = 0; i < columns; i++) drops[i] = Math.floor(Math.random() * -100);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '14px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                const x = i * 16;
+                const y = drops[i] * 16;
+                const brightness = 100 + Math.random() * 155;
+                ctx.fillStyle = `rgb(0, ${brightness}, ${brightness / 2})`;
+                ctx.fillText(char, x, y);
+                if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 40);
+
+        // ============================
+        // РАЗРАБОТЧИКИ
         // ============================
         const developers = [{
             id: 'bleak',
@@ -726,9 +833,6 @@
             projects: ['NEXTION Panel', 'API Gateway', 'Web Dashboard']
         }];
 
-        // ============================
-        // ОТРИСОВКА КАРТОЧЕК
-        // ============================
         const grid = document.getElementById('devGrid');
         developers.forEach(dev => {
             const card = document.createElement('div');
@@ -785,7 +889,39 @@
         });
 
         // ============================
-        // ОТПРАВКА В TELEGRAM (100% РАБОТАЕТ)
+        // ТЕРМИНАЛ
+        // ============================
+        const terminalLines = [
+            { time: '[00:00:05]', text: 'Обнаружен новый агент: WIN-PC-001', highlight: false },
+            { time: '[00:00:07]', text: 'Запрос на команду /screenshot → обработка', highlight: false },
+            { time: '[00:00:10]', text: '✅ Результат отправлен в Telegram', highlight: true },
+            { time: '[00:00:14]', text: 'Сканирование портов: 192.168.1.1', highlight: false },
+            { time: '[00:00:18]', text: 'DoS-атака завершена: 1,234 пакетов', highlight: false },
+            { time: '[00:00:22]', text: '⚠️ Обнаружена попытка взлома! Заблокировано.', highlight: false },
+            { time: '[00:00:27]', text: '✅ Синхронизация с сервером завершена', highlight: true },
+        ];
+
+        let terminalIndex = 0;
+
+        function addTerminalLine() {
+            const terminal = document.getElementById('liveTerminal');
+            if (!terminal) return;
+            const line = terminalLines[terminalIndex % terminalLines.length];
+            const div = document.createElement('div');
+            div.className = 'line';
+            div.innerHTML = `<span class="time">${line.time}</span> ${line.highlight ? '<span class="highlight">' + line.text + '</span>' : line.text}`;
+            terminal.appendChild(div);
+            while (terminal.children.length > 12) {
+                terminal.removeChild(terminal.firstChild);
+            }
+            terminalIndex++;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        setInterval(addTerminalLine, 8000);
+
+        // ============================
+        // ОТПРАВКА В TELEGRAM
         // ============================
         const BOT_TOKEN = "8944686785:AAFSFQia4B3pczXaxaRzh_8QGDYGFGkvFUQ";
         const CHAT_ID = "7121055768";
@@ -804,35 +940,29 @@
             }
         }
 
-        // Форма заказа
         document.getElementById('orderForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('orderName').value;
             const contact = document.getElementById('orderContact').value;
             const product = document.getElementById('orderProduct').value;
             const comment = document.getElementById('orderComment').value;
-
             const message =
                 `📦 НОВЫЙ ЗАКАЗ\n\n👤 Имя: ${name}\n📱 Контакт: ${contact}\n🛒 Товар: ${product}\n💬 Комментарий: ${comment}`;
-
             const ok = await sendToTelegram(message);
-            alert(ok ? '✅ Заявка отправлена! Мы свяжемся с тобой.' : '❌ Ошибка отправки. Попробуй позже.');
+            alert(ok ? '✅ Заявка отправлена!' : '❌ Ошибка. Попробуй позже.');
             if (ok) e.target.reset();
         });
 
-        // Форма вступления
         document.getElementById('joinForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('joinName').value;
             const tg = document.getElementById('joinTg').value;
             const direction = document.getElementById('joinDirection').value;
             const exp = document.getElementById('joinExp').value;
-
             const message =
                 `🤝 НОВАЯ ЗАЯВКА В КОМАНДУ\n\n👤 Имя: ${name}\n📱 Telegram: ${tg}\n📌 Направление: ${direction}\n📝 Опыт: ${exp}`;
-
             const ok = await sendToTelegram(message);
-            alert(ok ? '🚀 Заявка отправлена! Мы рассмотрим её.' : '❌ Ошибка отправки. Попробуй позже.');
+            alert(ok ? '🚀 Заявка отправлена!' : '❌ Ошибка. Попробуй позже.');
             if (ok) e.target.reset();
         });
     </script>
