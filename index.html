@@ -20,6 +20,28 @@
             color: #c0c0c0;
             min-height: 100vh;
             overflow-x: hidden;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00ffc8;
+            border-radius: 10px;
+        }
+
+        a {
+            color: #00ffc8;
+            text-decoration: none;
         }
 
         .container {
@@ -28,9 +50,90 @@
             padding: 0 20px;
         }
 
-        a {
+        /* ============================
+           HACKER LOADER
+        ============================ */
+        #loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #loader .spinner {
+            font-size: 48px;
             color: #00ffc8;
-            text-decoration: none;
+            animation: pulse 1s infinite;
+        }
+
+        #loader .loader-text {
+            margin-top: 16px;
+            font-size: 18px;
+            color: #5a6a7a;
+            letter-spacing: 3px;
+            animation: blink 1.5s infinite;
+        }
+
+        #loader .loader-progress {
+            margin-top: 12px;
+            width: 200px;
+            height: 2px;
+            background: rgba(0, 255, 200, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #loader .loader-progress .bar {
+            width: 0%;
+            height: 100%;
+            background: #00ffc8;
+            animation: progress 2.5s ease forwards;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes progress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
         }
 
         /* ============================
@@ -44,7 +147,7 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.12;
+            opacity: 0.10;
             overflow: hidden;
         }
 
@@ -87,6 +190,63 @@
             text-shadow: none;
         }
 
+        .logo .glitch {
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                opacity: 1;
+            }
+            92% {
+                opacity: 1;
+            }
+            93% {
+                opacity: 0.2;
+            }
+            94% {
+                opacity: 1;
+            }
+            95% {
+                opacity: 0.1;
+            }
+            96% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* БУРГЕР-МЕНЮ */
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .burger span {
+            display: block;
+            width: 26px;
+            height: 2px;
+            background: #c0c0c0;
+            transition: 0.3s;
+        }
+
+        .burger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(4px, 4px);
+        }
+        .burger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .burger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(4px, -4px);
+        }
+
         nav {
             display: flex;
             flex-wrap: wrap;
@@ -118,6 +278,27 @@
             background: rgba(0, 255, 200, 0.05);
         }
 
+        @media (max-width: 700px) {
+            .burger {
+                display: flex;
+            }
+            nav {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                padding-top: 12px;
+                border-top: 1px solid rgba(255, 255, 255, 0.03);
+            }
+            nav.open {
+                display: flex;
+            }
+            .header-inner {
+                flex-wrap: wrap;
+            }
+        }
+
         /* ============================
            БАННЕР
         ============================ */
@@ -137,7 +318,7 @@
             max-height: 55vh;
             object-fit: cover;
             display: block;
-            filter: brightness(0.65) contrast(1.05);
+            filter: brightness(0.65) contrast(1.05) saturate(1.1);
         }
 
         .banner .overlay {
@@ -210,7 +391,7 @@
         }
 
         /* ============================
-           СЧЁТЧИКИ
+           СЧЁТЧИКИ СТАТИСТИКИ
         ============================ */
         .stats-grid {
             display: grid;
@@ -241,6 +422,32 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-top: 2px;
+        }
+
+        /* ============================
+           ФЕЙКОВАЯ ЗАЩИТА
+        ============================ */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 16px;
+            border: 1px solid rgba(0, 255, 200, 0.06);
+            border-radius: 30px;
+            font-size: 11px;
+            color: #5a6a7a;
+            background: rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+
+        .security-badge .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00ffc8;
+            animation: pulse 1.5s infinite;
         }
 
         /* ============================
@@ -294,11 +501,11 @@
         }
 
         /* ============================
-           РАЗРАБОТЧИКИ
+           РАЗРАБОТЧИКИ (ОТДЕЛЬНАЯ СТРАНИЦА)
         ============================ */
         .dev-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 16px;
         }
 
@@ -562,6 +769,12 @@
             color: #5a6a7a;
         }
 
+        .modal .dev-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
         .modal .dev-contact a {
             color: #00ffc8;
             font-size: 13px;
@@ -570,7 +783,6 @@
             border-radius: 20px;
             transition: 0.25s;
             display: inline-block;
-            margin-right: 8px;
         }
 
         .modal .dev-contact a:hover {
@@ -616,6 +828,53 @@
 
         .live-terminal .line .highlight {
             color: #00ffc8;
+        }
+
+        /* ============================
+           FAQ (СКРЫТ, НО МОЖНО РАСКОММЕНТИРОВАТЬ)
+        ============================ */
+        .faq-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 255, 200, 0.03);
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+        }
+
+        .faq-item .q {
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-item .q .arrow {
+            color: #5a6a7a;
+            transition: 0.25s;
+        }
+
+        .faq-item .q .arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .faq-item .a {
+            color: #7a8ba3;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .faq-item .a.open {
+            display: block;
+        }
+
+        /* ============================
+           ЗВУК (HACKER CLICK)
+        ============================ */
+        .click-sound {
+            display: none;
         }
 
         /* ============================
@@ -695,6 +954,15 @@
 <body>
 
     <!-- ============================
+    HACKER LOADER
+    ============================ -->
+    <div id="loader">
+        <div class="spinner">⚡</div>
+        <div class="loader-text">ИНИЦИАЛИЗАЦИЯ...</div>
+        <div class="loader-progress"><div class="bar"></div></div>
+    </div>
+
+    <!-- ============================
     МАТРИЦА (ФОН)
     ============================ -->
     <div id="matrix-bg">
@@ -706,7 +974,10 @@
     ============================ -->
     <header>
         <div class="container header-inner">
-            <div class="logo">⚡ <span>NEXTION</span></div>
+            <div class="logo"><span class="glitch">⚡</span> <span>NEXTION</span></div>
+            <button class="burger" id="burger" aria-label="Меню">
+                <span></span><span></span><span></span>
+            </button>
             <nav id="mainNav">
                 <a href="#news" class="active" data-page="news">📰 Новости</a>
                 <a href="#devs" data-page="devs">🧑‍💻 Разработчики</a>
@@ -720,7 +991,7 @@
     <!-- ============================
     БАННЕР
     ============================ -->
-    <div class="banner" style="position:relative;">
+    <div class="banner">
         <img src="banner.jpg" alt="NEXTION Баннер" loading="lazy" />
         <div class="overlay">
             <h1>⚡ <span>NEXTION</span> LAB</h1>
@@ -729,13 +1000,13 @@
     </div>
 
     <!-- ============================
-    СЧЁТЧИКИ
+    СЧЁТЧИКИ СТАТИСТИКИ
     ============================ -->
     <div class="container" style="position:relative; z-index:5;">
         <div class="stats-grid">
-            <div class="stats-card"><div class="num" id="statAgents">42</div><div class="label">Агентов подключено</div></div>
-            <div class="stats-card"><div class="num" id="statCommands">1234</div><div class="label">Команд выполнено</div></div>
-            <div class="stats-card"><div class="num" id="statProjects">7</div><div class="label">Активных проектов</div></div>
+            <div class="stats-card"><div class="num" id="statAgents">0</div><div class="label">Агентов подключено</div></div>
+            <div class="stats-card"><div class="num" id="statCommands">0</div><div class="label">Команд выполнено</div></div>
+            <div class="stats-card"><div class="num" id="statProjects">0</div><div class="label">Активных проектов</div></div>
             <div class="stats-card"><div class="num">6</div><div class="label">В команде</div></div>
         </div>
     </div>
@@ -769,10 +1040,13 @@
                     <span class="date">05.07.2026</span>
                 </div>
             </div>
+            <div class="security-badge">
+                <span class="dot"></span> ЗАЩИЩЁННОЕ СОЕДИНЕНИЕ · SSL 256-BIT
+            </div>
         </div>
     </div>
 
-    <!-- РАЗРАБОТЧИКИ -->
+    <!-- РАЗРАБОТЧИКИ (ОТДЕЛЬНАЯ СТРАНИЦА) -->
     <div id="page-devs" class="page">
         <div class="container">
             <div class="page-title">🧑‍💻 <span>Разработчики</span> команды</div>
@@ -903,14 +1177,29 @@
             <div class="dev-name" id="modalName">BLEAK</div>
             <div class="dev-role" id="modalRole">Основатель / Архитектор / Лидер</div>
             <div class="dev-experience" id="modalExperience">⚡ Опыт: 7+ лет</div>
-            <div class="dev-desc" id="modalDesc">Полный стек: Assembler, Python, C++, Android, Web. Архитектор всех проектов NEXTION. Координатор команды, реверс-инжиниринг, низкоуровневое программирование и безопасность.</div>
+            <div class="dev-desc" id="modalDesc">Полный стек: Assembler, Python, C++, Android, Web. Архитектор всех проектов NEXTION.</div>
             <div class="dev-projects" id="modalProjects"></div>
-            <div class="dev-contact">
-                <a href="https://t.me/Bleeaak" target="_blank">Telegram</a>
-                <a href="https://github.com/NEXXTION" target="_blank">GitHub</a>
-            </div>
+            <div class="dev-contact" id="modalContact"></div>
         </div>
     </div>
+
+    <!-- ============================
+    FAQ (СКРЫТ, НО МОЖНО РАСКОММЕНТИРОВАТЬ)
+    ============================ -->
+    <!--
+    <div class="container" style="position:relative; z-index:5; padding: 0 20px 60px;">
+        <div class="page-title">❓ <span>FAQ</span></div>
+        <div class="page-sub">// частые вопросы</div>
+        <div class="faq-item">
+            <div class="q">Что такое NEXTION RAT? <span class="arrow">▼</span></div>
+            <div class="a">NEXTION RAT — это фреймворк для удалённого управления Windows-системами через Telegram.</div>
+        </div>
+        <div class="faq-item">
+            <div class="q">Сколько стоит? <span class="arrow">▼</span></div>
+            <div class="a">Цены указаны в разделе "Товары".</div>
+        </div>
+    </div>
+    -->
 
     <!-- ============================
     ТЕРМИНАЛ
@@ -920,6 +1209,13 @@
         <div class="line"><span class="time">[00:00:01]</span> Подключение к базе данных агентов...</div>
         <div class="line"><span class="time">[00:00:02]</span> <span class="highlight">✅</span> Установлено соединение с сервером</div>
     </div>
+
+    <!-- ============================
+    ЗВУК (HACKER CLICK)
+    ============================ -->
+    <audio id="clickSound" class="click-sound">
+        <source src="data:audio/wav;base64,U1GRl9BQU1BABQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAACAgICAgICAgIC" type="audio/wav">
+    </audio>
 
     <!-- ============================
     ФУТЕР
@@ -936,6 +1232,85 @@
     </footer>
 
     <script>
+        // ============================
+        // ЗВУК ПРИ КЛИКЕ
+        // ============================
+        document.addEventListener('click', function() {
+            const audio = document.getElementById('clickSound');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            }
+        });
+
+        // ============================
+        // HACKER LOADER
+        // ============================
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('hidden');
+                document.body.classList.add('loaded');
+                animateStats();
+                terminalInterval = setInterval(addTerminalLine, 8000);
+            }, 3000);
+        });
+
+        // ============================
+        // СЧЁТЧИКИ СТАТИСТИКИ (АНИМАЦИЯ)
+        // ============================
+        function animateStats() {
+            const targets = [
+                { el: document.getElementById('statAgents'), target: 42 },
+                { el: document.getElementById('statCommands'), target: 1234 },
+                { el: document.getElementById('statProjects'), target: 7 },
+            ];
+
+            targets.forEach(item => {
+                let current = 0;
+                const step = Math.ceil(item.target / 30);
+                const interval = setInterval(() => {
+                    current += step;
+                    if (current >= item.target) {
+                        current = item.target;
+                        clearInterval(interval);
+                    }
+                    item.el.textContent = current;
+                }, 80);
+            });
+        }
+
+        // ============================
+        // ТЕРМИНАЛ (ЖИВОЙ ЛОГ)
+        // ============================
+        const terminalLines = [
+            { time: '[00:00:05]', text: 'Обнаружен новый агент: WIN-PC-001', highlight: false },
+            { time: '[00:00:07]', text: 'Запрос на команду /screenshot → обработка', highlight: false },
+            { time: '[00:00:10]', text: '✅ Результат отправлен в Telegram', highlight: true },
+            { time: '[00:00:14]', text: 'Сканирование портов: 192.168.1.1', highlight: false },
+            { time: '[00:00:18]', text: 'DoS-атака завершена: 1,234 пакетов', highlight: false },
+            { time: '[00:00:22]', text: '⚠️ Обнаружена попытка взлома! Заблокировано.', highlight: false },
+            { time: '[00:00:27]', text: '✅ Синхронизация с сервером завершена', highlight: true },
+        ];
+
+        let terminalIndex = 0;
+
+        function addTerminalLine() {
+            const terminal = document.getElementById('liveTerminal');
+            if (!terminal) return;
+            const line = terminalLines[terminalIndex % terminalLines.length];
+            const div = document.createElement('div');
+            div.className = 'line';
+            div.innerHTML = `<span class="time">${line.time}</span> ${line.highlight ? '<span class="highlight">' + line.text + '</span>' : line.text}`;
+            terminal.appendChild(div);
+            while (terminal.children.length > 12) {
+                terminal.removeChild(terminal.firstChild);
+            }
+            terminalIndex++;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        let terminalInterval;
+
         // ============================
         // МАТРИЦА (ФОН)
         // ============================
@@ -974,7 +1349,7 @@
         setInterval(drawMatrix, 40);
 
         // ============================
-        // РАЗРАБОТЧИКИ (ДАННЫЕ)
+        // РАЗРАБОТЧИКИ (С КОНТАКТАМИ)
         // ============================
         const developers = [{
             id: 'bleak',
@@ -983,7 +1358,11 @@
             role: 'Основатель / Архитектор / Лидер',
             experience: '⚡ Опыт: 7+ лет',
             desc: 'Полный стек: Assembler, Python, C++, Android, Web. Архитектор всех проектов NEXTION.',
-            projects: ['NEXTION RAT', 'DoS Engine', 'BLEAK AI', 'Android Agent', 'NEXTION Portal']
+            projects: ['NEXTION RAT', 'DoS Engine', 'BLEAK AI', 'Android Agent', 'NEXTION Portal'],
+            contact: [
+                { type: 'Telegram', url: 'https://t.me/Bleeaak' },
+                { type: 'GitHub', url: 'https://github.com/NEXXTION' }
+            ]
         }, {
             id: 'indi',
             name: 'INDI',
@@ -991,7 +1370,10 @@
             role: 'Python разработчик',
             experience: '⚡ Опыт: 4 года',
             desc: 'Telegram-боты, автоматизация, OSINT, парсинг, бэкенд.',
-            projects: ['Telegram Bot API', 'OSINT Tools', 'Data Parser']
+            projects: ['Telegram Bot API', 'OSINT Tools', 'Data Parser'],
+            contact: [
+                { type: 'Telegram', url: 'https://t.me/Asatullayebna01' }
+            ]
         }, {
             id: 'n',
             name: 'N!',
@@ -999,7 +1381,10 @@
             role: 'Python разработчик',
             experience: '⚡ Опыт: 3 года',
             desc: 'Скрипты для анализа данных, автоматизация сбора информации.',
-            projects: ['Data Parser', 'AutoCollector', 'Web Scraper']
+            projects: ['Data Parser', 'AutoCollector', 'Web Scraper'],
+            contact: [
+                { type: 'Telegram', url: 'https://t.me/nick_n' }
+            ]
         }, {
             id: 'sss',
             name: 'SSS',
@@ -1007,7 +1392,10 @@
             role: 'C++ разработчик',
             experience: '⚡ Опыт: 5 лет',
             desc: 'Драйверы Windows, руткиты, обход антивирусов.',
-            projects: ['Rootkit Engine', 'Driver Framework', 'System Utilities']
+            projects: ['Rootkit Engine', 'Driver Framework', 'System Utilities'],
+            contact: [
+                { type: 'Telegram', url: 'https://t.me/nick_sss' }
+            ]
         }, {
             id: 'kent',
             name: 'KENT',
@@ -1015,7 +1403,10 @@
             role: 'Android разработчик',
             experience: '⚡ Опыт: 4 года',
             desc: 'Мобильные агенты, скрытые сервисы, сборка APK.',
-            projects: ['Android Agent', 'APK Builder', 'Mobile Framework']
+            projects: ['Android Agent', 'APK Builder', 'Mobile Framework'],
+            contact: [
+                { type: 'Telegram', url: 'https://t.me/nick_kent' }
+            ]
         }, {
             id: 'xtrim',
             name: 'Xtrim',
@@ -1023,7 +1414,10 @@
             role: 'Web разработчик',
             experience: '⚡ Опыт: 3 года',
             desc: 'Панели управления, дашборды, REST API.',
-            projects: ['NEXTION Panel', 'API Gateway', 'Web Dashboard']
+            projects: ['NEXTION Panel', 'API Gateway', 'Web Dashboard'],
+            contact: [
+                { type: 'Telegram', url: 'https://t.me/nick_xtrim' }
+            ]
         }];
 
         // ============================
@@ -1059,6 +1453,7 @@
             document.getElementById('modalRole').textContent = dev.role;
             document.getElementById('modalExperience').textContent = dev.experience;
             document.getElementById('modalDesc').textContent = dev.desc;
+
             const projectsContainer = document.getElementById('modalProjects');
             projectsContainer.innerHTML = '';
             dev.projects.forEach(p => {
@@ -1066,6 +1461,19 @@
                 span.textContent = p;
                 projectsContainer.appendChild(span);
             });
+
+            const contactContainer = document.getElementById('modalContact');
+            contactContainer.innerHTML = '';
+            if (dev.contact) {
+                dev.contact.forEach(c => {
+                    const a = document.createElement('a');
+                    a.href = c.url;
+                    a.target = '_blank';
+                    a.textContent = c.type;
+                    contactContainer.appendChild(a);
+                });
+            }
+
             modal.classList.add('open');
         }
 
@@ -1075,18 +1483,33 @@
         });
 
         // ============================
-        // НАВИГАЦИЯ (ВКЛАДКИ)
+        // БУРГЕР-МЕНЮ
+        // ============================
+        const burger = document.getElementById('burger');
+        const nav = document.getElementById('mainNav');
+
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('active');
+            nav.classList.toggle('open');
+        });
+
+        document.querySelectorAll('#mainNav a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                nav.classList.remove('open');
+            });
+        });
+
+        // ============================
+        // НАВИГАЦИЯ ПО ВКЛАДКАМ
         // ============================
         document.querySelectorAll('#mainNav a').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const pageId = link.dataset.page;
-                // Обновляем URL (без перезагрузки)
                 history.pushState(null, '', `#${pageId}`);
-                // Активируем ссылку
                 document.querySelectorAll('#mainNav a').forEach(a => a.classList.remove('active'));
                 link.classList.add('active');
-                // Показываем страницу
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                 const targetPage = document.getElementById(`page-${pageId}`);
                 if (targetPage) targetPage.classList.add('active');
@@ -1107,39 +1530,6 @@
                 if (targetPage) targetPage.classList.add('active');
             }
         });
-
-        // ============================
-        // ТЕРМИНАЛ
-        // ============================
-        const terminalLines = [
-            { time: '[00:00:05]', text: 'Обнаружен новый агент: WIN-PC-001', highlight: false },
-            { time: '[00:00:07]', text: 'Запрос на команду /screenshot → обработка', highlight: false },
-            { time: '[00:00:10]', text: '✅ Результат отправлен в Telegram', highlight: true },
-            { time: '[00:00:14]', text: 'Сканирование портов: 192.168.1.1', highlight: false },
-            { time: '[00:00:18]', text: 'DoS-атака завершена: 1,234 пакетов', highlight: false },
-            { time: '[00:00:22]', text: '⚠️ Обнаружена попытка взлома! Заблокировано.', highlight: false },
-            { time: '[00:00:27]', text: '✅ Синхронизация с сервером завершена', highlight: true },
-        ];
-
-        let terminalIndex = 0;
-
-        function addTerminalLine() {
-            const terminal = document.getElementById('liveTerminal');
-            if (!terminal) return;
-            const line = terminalLines[terminalIndex % terminalLines.length];
-            const div = document.createElement('div');
-            div.className = 'line';
-            div.innerHTML =
-                `<span class="time">${line.time}</span> ${line.highlight ? '<span class="highlight">' + line.text + '</span>' : line.text}`;
-            terminal.appendChild(div);
-            while (terminal.children.length > 12) {
-                terminal.removeChild(terminal.firstChild);
-            }
-            terminalIndex++;
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-
-        setInterval(addTerminalLine, 8000);
 
         // ============================
         // ОТПРАВКА В TELEGRAM
