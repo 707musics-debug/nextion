@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NEXTION — darknet portal</title>
     <style>
+        /* ============================
+           ГЛОБАЛЬНЫЕ СТИЛИ
+        ============================ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Courier New', monospace;
             background: #0a0a0a;
@@ -17,18 +21,20 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
+
         a {
             color: #00ffc8;
             text-decoration: none;
         }
 
         /* ============================
-           АНИМИРОВАННЫЙ ФОН (МАТРИЦА)
+           МАТРИЦА (ФОН)
         ============================ */
         #matrix-bg {
             position: fixed;
@@ -41,20 +47,25 @@
             opacity: 0.12;
             overflow: hidden;
         }
+
         #matrix-bg canvas {
             display: block;
             width: 100%;
             height: 100%;
         }
 
-        /* ШАПКА */
+        /* ============================
+           ШАПКА
+        ============================ */
         header {
             position: relative;
             z-index: 10;
             background: rgba(10, 10, 10, 0.92);
             border-bottom: 1px solid rgba(0, 255, 200, 0.1);
             padding: 14px 0;
+            backdrop-filter: blur(10px);
         }
+
         .header-inner {
             display: flex;
             align-items: center;
@@ -62,20 +73,27 @@
             flex-wrap: wrap;
             gap: 12px 24px;
         }
+
         .logo {
             font-size: 26px;
             font-weight: 700;
+            letter-spacing: 3px;
             color: #00ffc8;
+            text-shadow: 0 0 20px rgba(0, 255, 200, 0.15);
         }
+
         .logo span {
-            color: #fff;
+            color: #ffffff;
+            text-shadow: none;
         }
+
         nav {
             display: flex;
             flex-wrap: wrap;
             gap: 4px 8px;
         }
-        nav button {
+
+        nav a {
             background: transparent;
             border: 1px solid rgba(0, 255, 200, 0.06);
             color: #7a8ba3;
@@ -85,17 +103,24 @@
             cursor: pointer;
             transition: 0.25s;
             border-radius: 4px;
-        }
-        nav button:hover {
-            color: #fff;
-            border-color: rgba(0, 255, 200, 0.25);
-        }
-        nav button.active {
-            color: #00ffc8;
-            border-color: #00ffc8;
+            text-decoration: none;
         }
 
-        /* БАННЕР */
+        nav a:hover {
+            color: #ffffff;
+            border-color: rgba(0, 255, 200, 0.25);
+            background: rgba(0, 255, 200, 0.03);
+        }
+
+        nav a.active {
+            color: #00ffc8;
+            border-color: #00ffc8;
+            background: rgba(0, 255, 200, 0.05);
+        }
+
+        /* ============================
+           БАННЕР
+        ============================ */
         .banner {
             position: relative;
             z-index: 5;
@@ -105,6 +130,7 @@
             margin: 0 auto 20px;
             border-bottom: 1px solid rgba(0, 255, 200, 0.05);
         }
+
         .banner img {
             width: 100%;
             height: auto;
@@ -113,6 +139,7 @@
             display: block;
             filter: brightness(0.65) contrast(1.05);
         }
+
         .banner .overlay {
             position: absolute;
             bottom: 0;
@@ -122,27 +149,37 @@
             background: linear-gradient(0deg, rgba(10, 10, 10, 0.9) 0%, transparent 100%);
             pointer-events: none;
         }
+
         .banner .overlay h1 {
             font-size: 36px;
-            color: #fff;
+            color: #ffffff;
         }
+
         .banner .overlay h1 span {
             color: #00ffc8;
         }
+
         .banner .overlay p {
             color: #7a8ba3;
             font-size: 14px;
+            letter-spacing: 2px;
         }
 
-        /* СТРАНИЦЫ */
+        /* ============================
+           СТРАНИЦЫ (ВКЛАДКИ)
+        ============================ */
         .page {
             display: none;
+            position: relative;
+            z-index: 5;
             padding: 40px 0 60px;
             animation: fadeIn 0.4s ease;
         }
+
         .page.active {
             display: block;
         }
+
         @keyframes fadeIn {
             0% {
                 opacity: 0;
@@ -153,14 +190,18 @@
                 transform: translateY(0);
             }
         }
+
         .page-title {
             font-size: 32px;
-            color: #fff;
+            font-weight: 700;
+            color: #ffffff;
             margin-bottom: 8px;
         }
+
         .page-title span {
             color: #00ffc8;
         }
+
         .page-sub {
             color: #5a6a7a;
             font-size: 14px;
@@ -168,13 +209,18 @@
             letter-spacing: 1px;
         }
 
-        /* СЧЁТЧИКИ */
+        /* ============================
+           СЧЁТЧИКИ
+        ============================ */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 16px;
             margin-bottom: 30px;
+            position: relative;
+            z-index: 5;
         }
+
         .stats-card {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(0, 255, 200, 0.04);
@@ -182,11 +228,13 @@
             padding: 16px 12px;
             text-align: center;
         }
+
         .stats-card .num {
             font-size: 28px;
             font-weight: 700;
             color: #00ffc8;
         }
+
         .stats-card .label {
             font-size: 11px;
             color: #5a6a7a;
@@ -195,35 +243,49 @@
             margin-top: 2px;
         }
 
-        /* НОВОСТИ */
+        /* ============================
+           НОВОСТИ
+        ============================ */
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
         }
+
         .news-card {
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(0, 255, 200, 0.04);
             border-radius: 6px;
             padding: 20px;
+            transition: 0.3s;
         }
+
+        .news-card:hover {
+            border-color: rgba(0, 255, 200, 0.15);
+        }
+
         .news-card .tag {
             font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             color: #00ffc8;
             background: rgba(0, 255, 200, 0.06);
             padding: 2px 12px;
             border-radius: 20px;
             display: inline-block;
         }
+
         .news-card h3 {
-            color: #fff;
+            color: #ffffff;
             font-size: 18px;
             margin: 10px 0 6px;
         }
+
         .news-card p {
             color: #7a8ba3;
             font-size: 14px;
         }
+
         .news-card .date {
             font-size: 11px;
             color: #3a4a5a;
@@ -231,12 +293,15 @@
             display: block;
         }
 
-        /* РАЗРАБОТЧИКИ */
+        /* ============================
+           РАЗРАБОТЧИКИ
+        ============================ */
         .dev-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 16px;
         }
+
         .dev-card {
             background: rgba(0, 0, 0, 0.35);
             border: 1px solid rgba(0, 255, 200, 0.04);
@@ -246,22 +311,29 @@
             cursor: pointer;
             transition: 0.3s;
         }
+
         .dev-card:hover {
             border-color: rgba(0, 255, 200, 0.2);
             transform: scale(1.02);
+            background: rgba(0, 255, 200, 0.02);
         }
+
         .dev-card .avatar {
             font-size: 40px;
+            margin-bottom: 4px;
         }
+
         .dev-card .nick {
             font-size: 16px;
             font-weight: 600;
-            color: #fff;
+            color: #ffffff;
         }
+
         .dev-card .role {
             font-size: 12px;
             color: #5a6a7a;
         }
+
         .dev-card .status {
             font-size: 10px;
             color: #00ffc8;
@@ -272,38 +344,53 @@
             border-radius: 20px;
         }
 
-        /* ТОВАРЫ */
+        /* ============================
+           ТОВАРЫ
+        ============================ */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 20px;
         }
+
         .product-card {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(0, 255, 200, 0.04);
             border-radius: 6px;
             padding: 24px 18px;
             text-align: center;
+            transition: 0.3s;
         }
+
+        .product-card:hover {
+            border-color: rgba(0, 255, 200, 0.1);
+        }
+
         .product-card .icon {
             font-size: 36px;
         }
+
         .product-card h3 {
-            color: #fff;
+            color: #ffffff;
             font-size: 18px;
+            margin: 6px 0 4px;
         }
+
         .product-card .desc {
             color: #7a8ba3;
             font-size: 13px;
             line-height: 1.6;
             margin: 8px 0 10px;
         }
+
         .product-card .details {
             font-size: 12px;
             color: #5a6a7a;
             border-top: 1px solid rgba(255, 255, 255, 0.02);
             padding-top: 10px;
+            margin-top: 8px;
         }
+
         .product-card .price {
             color: #00ffc8;
             font-weight: 700;
@@ -312,7 +399,9 @@
             margin-top: 8px;
         }
 
-        /* ФОРМЫ */
+        /* ============================
+           ФОРМЫ
+        ============================ */
         .form-card {
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(0, 255, 200, 0.04);
@@ -320,16 +409,20 @@
             padding: 28px 24px;
             max-width: 520px;
         }
+
         .form-group {
             margin-bottom: 16px;
         }
+
         .form-group label {
             display: block;
             font-size: 12px;
             text-transform: uppercase;
+            letter-spacing: 1px;
             color: #5a6a7a;
             margin-bottom: 4px;
         }
+
         .form-group input,
         .form-group textarea,
         .form-group select {
@@ -338,15 +431,23 @@
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 4px;
-            color: #fff;
+            color: #ffffff;
             font-family: 'Courier New', monospace;
             font-size: 14px;
+            transition: 0.25s;
         }
+
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: rgba(0, 255, 200, 0.2);
         }
+
+        .form-group textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+
         .btn {
             padding: 10px 30px;
             background: transparent;
@@ -355,14 +456,18 @@
             font-family: 'Courier New', monospace;
             font-size: 14px;
             cursor: pointer;
-            border-radius: 4px;
             transition: 0.25s;
-        }
-        .btn:hover {
-            background: rgba(0, 255, 200, 0.04);
+            border-radius: 4px;
         }
 
-        /* МОДАЛКА */
+        .btn:hover {
+            background: rgba(0, 255, 200, 0.04);
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.03);
+        }
+
+        /* ============================
+           МОДАЛКА
+        ============================ */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -373,9 +478,11 @@
             align-items: center;
             justify-content: center;
         }
+
         .modal-overlay.open {
             display: flex;
         }
+
         .modal {
             background: #0e0e0e;
             border: 1px solid rgba(0, 255, 200, 0.08);
@@ -384,7 +491,9 @@
             width: 90%;
             padding: 28px 24px;
             position: relative;
+            animation: fadeIn 0.3s ease;
         }
+
         .modal .close {
             position: absolute;
             top: 12px;
@@ -394,41 +503,56 @@
             cursor: pointer;
             background: none;
             border: none;
+            font-family: 'Courier New', monospace;
         }
+
         .modal .close:hover {
-            color: #fff;
+            color: #ffffff;
         }
+
         .modal .dev-avatar {
             font-size: 48px;
             text-align: center;
+            margin-bottom: 4px;
         }
+
         .modal .dev-name {
             font-size: 22px;
             font-weight: 700;
-            color: #fff;
+            color: #ffffff;
             text-align: center;
         }
+
         .modal .dev-role {
             text-align: center;
             color: #00ffc8;
             font-size: 14px;
+            margin-bottom: 6px;
         }
+
         .modal .dev-experience {
             text-align: center;
             font-size: 13px;
             color: #7a8ba3;
+            margin-bottom: 12px;
         }
+
         .modal .dev-desc {
             color: #aabbcc;
             font-size: 14px;
             line-height: 1.7;
-            margin: 12px 0;
+            margin-bottom: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 12px;
         }
+
         .modal .dev-projects {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
+            margin-bottom: 14px;
         }
+
         .modal .dev-projects span {
             background: rgba(0, 255, 200, 0.04);
             border: 1px solid rgba(0, 255, 200, 0.04);
@@ -437,17 +561,25 @@
             font-size: 12px;
             color: #5a6a7a;
         }
+
         .modal .dev-contact a {
             color: #00ffc8;
             font-size: 13px;
             border: 1px solid rgba(0, 255, 200, 0.06);
             padding: 4px 16px;
             border-radius: 20px;
+            transition: 0.25s;
             display: inline-block;
             margin-right: 8px;
         }
 
-        /* ТЕРМИНАЛ */
+        .modal .dev-contact a:hover {
+            background: rgba(0, 255, 200, 0.04);
+        }
+
+        /* ============================
+           ТЕРМИНАЛ
+        ============================ */
         .live-terminal {
             position: fixed;
             bottom: 0;
@@ -466,24 +598,32 @@
             transition: max-height 0.3s ease;
             cursor: pointer;
         }
+
         .live-terminal:hover {
             max-height: 200px;
             overflow-y: auto;
         }
+
         .live-terminal .line {
             padding: 2px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
+
         .live-terminal .line .time {
             color: #3a4a5a;
             margin-right: 12px;
         }
+
         .live-terminal .line .highlight {
             color: #00ffc8;
         }
 
-        /* ФУТЕР */
+        /* ============================
+           ФУТЕР
+        ============================ */
         footer {
+            position: relative;
+            z-index: 5;
             border-top: 1px solid rgba(255, 255, 255, 0.02);
             padding: 24px 0;
             text-align: center;
@@ -491,13 +631,19 @@
             font-size: 13px;
             margin-top: 20px;
         }
+
         footer a {
             color: #5a6a7a;
+            transition: 0.25s;
         }
+
         footer a:hover {
             color: #00ffc8;
         }
 
+        /* ============================
+           АДАПТИВ
+        ============================ */
         @media (max-width: 700px) {
             .header-inner {
                 flex-direction: column;
@@ -507,7 +653,7 @@
             nav {
                 justify-content: center;
             }
-            nav button {
+            nav a {
                 font-size: 12px;
                 padding: 6px 12px;
             }
@@ -520,40 +666,71 @@
             .banner .overlay p {
                 font-size: 12px;
             }
+            .dev-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .live-terminal {
+                font-size: 10px;
+                max-height: 40px;
+                padding: 4px 12px;
+            }
+            .live-terminal:hover {
+                max-height: 120px;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .dev-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-card {
+                padding: 18px 14px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- МАТРИЦА -->
+    <!-- ============================
+    МАТРИЦА (ФОН)
+    ============================ -->
     <div id="matrix-bg">
         <canvas id="matrixCanvas"></canvas>
     </div>
 
-    <!-- ШАПКА -->
+    <!-- ============================
+    ШАПКА
+    ============================ -->
     <header>
         <div class="container header-inner">
             <div class="logo">⚡ <span>NEXTION</span></div>
             <nav id="mainNav">
-                <button class="active" data-page="news">📰 Новости</button>
-                <button data-page="devs">🧑‍💻 Разработчики</button>
-                <button data-page="products">🛒 Товары</button>
-                <button data-page="order">📦 Заказать</button>
-                <button data-page="join">🤝 В команду</button>
+                <a href="#news" class="active" data-page="news">📰 Новости</a>
+                <a href="#devs" data-page="devs">🧑‍💻 Разработчики</a>
+                <a href="#products" data-page="products">🛒 Товары</a>
+                <a href="#order" data-page="order">📦 Заказать</a>
+                <a href="#join" data-page="join">🤝 В команду</a>
             </nav>
         </div>
     </header>
 
-    <!-- БАННЕР -->
-    <div class="banner">
-        <img src="banner.jpg" alt="NEXTION Баннер" />
+    <!-- ============================
+    БАННЕР
+    ============================ -->
+    <div class="banner" style="position:relative;">
+        <img src="banner.jpg" alt="NEXTION Баннер" loading="lazy" />
         <div class="overlay">
             <h1>⚡ <span>NEXTION</span> LAB</h1>
             <p>КИБЕРБЕЗОПАСНОСТЬ · RAT · ИИ · АНДРОИД</p>
         </div>
     </div>
 
-    <!-- СЧЁТЧИКИ -->
+    <!-- ============================
+    СЧЁТЧИКИ
+    ============================ -->
     <div class="container" style="position:relative; z-index:5;">
         <div class="stats-grid">
             <div class="stats-card"><div class="num" id="statAgents">42</div><div class="label">Агентов подключено</div></div>
@@ -563,7 +740,11 @@
         </div>
     </div>
 
-    <!-- СТРАНИЦЫ -->
+    <!-- ============================
+    СТРАНИЦЫ (ВКЛАДКИ)
+    ============================ -->
+
+    <!-- НОВОСТИ -->
     <div id="page-news" class="page active">
         <div class="container">
             <div class="page-title">📰 <span>Новости</span> NEXTION</div>
@@ -572,7 +753,7 @@
                 <div class="news-card">
                     <span class="tag">Обновление</span>
                     <h3>NEXTION RAT v9.0</h3>
-                    <p>Добавлены DoS-атака и СМС-бомбер.</p>
+                    <p>Добавлены DoS-атака и СМС-бомбер. Полный контроль над системой.</p>
                     <span class="date">08.07.2026</span>
                 </div>
                 <div class="news-card">
@@ -584,21 +765,25 @@
                 <div class="news-card">
                     <span class="tag">Инфраструктура</span>
                     <h3>Открыт портал</h3>
-                    <p>Запущен официальный сайт NEXTION.</p>
+                    <p>Запущен официальный сайт NEXTION в даркнет-стиле.</p>
                     <span class="date">05.07.2026</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- РАЗРАБОТЧИКИ -->
     <div id="page-devs" class="page">
         <div class="container">
             <div class="page-title">🧑‍💻 <span>Разработчики</span> команды</div>
             <div class="page-sub">// нажми на карточку для полной информации</div>
-            <div class="dev-grid" id="devGrid"></div>
+            <div class="dev-grid" id="devGrid">
+                <!-- карточки через JS -->
+            </div>
         </div>
     </div>
 
+    <!-- ТОВАРЫ -->
     <div id="page-products" class="page">
         <div class="container">
             <div class="page-title">🛒 <span>Товары</span> и услуги</div>
@@ -607,35 +792,36 @@
                 <div class="product-card">
                     <div class="icon">💀</div>
                     <h3>NEXTION RAT</h3>
-                    <div class="desc">RAT-фреймворк для удалённого управления Windows.</div>
-                    <div class="details">🔹 Telegram бот<br>🔹 40+ команд<br>🔹 DoS-атака</div>
+                    <div class="desc">Полноценный RAT-фреймворк для удалённого управления Windows-системами через Telegram.</div>
+                    <div class="details">🔹 Управление через Telegram бота<br>🔹 40+ команд<br>🔹 DoS-атака<br>🔹 СМС-бомбер<br>🔹 Кейлоггер<br>🔹 Автозагрузка и скрытность</div>
                     <span class="price">от $100</span>
                 </div>
                 <div class="product-card">
                     <div class="icon">📱</div>
                     <h3>Android-агент</h3>
-                    <div class="desc">Скрытый агент: камера, GPS, микрофон.</div>
-                    <div class="details">🔹 Камера<br>🔹 GPS<br>🔹 Фоновый режим</div>
+                    <div class="desc">Скрытый агент для Android с полным контролем: камера, GPS, микрофон, файлы.</div>
+                    <div class="details">🔹 Фото с камеры (перед/зад)<br>🔹 GPS координаты<br>🔹 Запись звука<br>🔹 Сбор файлов<br>🔹 Работает в фоне</div>
                     <span class="price">от $80</span>
                 </div>
                 <div class="product-card">
                     <div class="icon">🛡️</div>
                     <h3>DoS-инструмент</h3>
-                    <div class="desc">Стресс-тестирование серверов.</div>
-                    <div class="details">🔹 HTTP/UDP Flood<br>🔹 Настраиваемые потоки</div>
+                    <div class="desc">Модуль для стресс-тестирования серверов. HTTP / UDP / SYN Flood.</div>
+                    <div class="details">🔹 HTTP Flood<br>🔹 UDP Flood<br>🔹 SYN Flood<br>🔹 Настраиваемые потоки<br>🔹 Время и мощность</div>
                     <span class="price">от $50</span>
                 </div>
                 <div class="product-card">
                     <div class="icon">🧠</div>
                     <h3>BLEAK AI</h3>
-                    <div class="desc">Голосовой ИИ-помощник для ПК.</div>
-                    <div class="details">🔹 Голосовое управление<br>🔹 Нейросеть (Groq)</div>
+                    <div class="desc">Голосовой ИИ-помощник для управления ПК через голосовые команды.</div>
+                    <div class="details">🔹 Голосовое управление<br>🔹 Открытие программ<br>🔹 Время/дата<br>🔹 Напоминания<br>🔹 Подключение к нейросети (Groq)</div>
                     <span class="price">от $60</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ЗАКАЗАТЬ -->
     <div id="page-order" class="page">
         <div class="container">
             <div class="page-title">📦 <span>Заказать</span> продукт</div>
@@ -670,6 +856,7 @@
         </div>
     </div>
 
+    <!-- В КОМАНДУ -->
     <div id="page-join" class="page">
         <div class="container">
             <div class="page-title">🤝 <span>Вступить</span> в команду</div>
@@ -706,15 +893,17 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА -->
+    <!-- ============================
+    МОДАЛКА (РАЗРАБОТЧИК)
+    ============================ -->
     <div class="modal-overlay" id="devModal">
         <div class="modal">
             <button class="close" id="modalClose">✕</button>
             <div class="dev-avatar" id="modalAvatar">🧠</div>
             <div class="dev-name" id="modalName">BLEAK</div>
-            <div class="dev-role" id="modalRole">Лидер / Assembler</div>
+            <div class="dev-role" id="modalRole">Основатель / Архитектор / Лидер</div>
             <div class="dev-experience" id="modalExperience">⚡ Опыт: 7+ лет</div>
-            <div class="dev-desc" id="modalDesc">Архитектор проектов, реверс-инжиниринг, анализ защит.</div>
+            <div class="dev-desc" id="modalDesc">Полный стек: Assembler, Python, C++, Android, Web. Архитектор всех проектов NEXTION. Координатор команды, реверс-инжиниринг, низкоуровневое программирование и безопасность.</div>
             <div class="dev-projects" id="modalProjects"></div>
             <div class="dev-contact">
                 <a href="https://t.me/Bleeaak" target="_blank">Telegram</a>
@@ -723,14 +912,18 @@
         </div>
     </div>
 
-    <!-- ТЕРМИНАЛ -->
+    <!-- ============================
+    ТЕРМИНАЛ
+    ============================ -->
     <div class="live-terminal" id="liveTerminal">
         <div class="line"><span class="time">[00:00:00]</span> <span class="highlight">NEXTION</span> система инициализирована</div>
         <div class="line"><span class="time">[00:00:01]</span> Подключение к базе данных агентов...</div>
         <div class="line"><span class="time">[00:00:02]</span> <span class="highlight">✅</span> Установлено соединение с сервером</div>
     </div>
 
-    <!-- ФУТЕР -->
+    <!-- ============================
+    ФУТЕР
+    ============================ -->
     <footer>
         <div class="container">
             <p>⚡ NEXTION &bull; 2026 &bull; закрытый портал</p>
@@ -744,7 +937,7 @@
 
     <script>
         // ============================
-        // МАТРИЦА
+        // МАТРИЦА (ФОН)
         // ============================
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
@@ -781,7 +974,7 @@
         setInterval(drawMatrix, 40);
 
         // ============================
-        // РАЗРАБОТЧИКИ
+        // РАЗРАБОТЧИКИ (ДАННЫЕ)
         // ============================
         const developers = [{
             id: 'bleak',
@@ -833,17 +1026,22 @@
             projects: ['NEXTION Panel', 'API Gateway', 'Web Dashboard']
         }];
 
+        // ============================
+        // ОТРИСОВКА КАРТОЧЕК
+        // ============================
         const grid = document.getElementById('devGrid');
+
         developers.forEach(dev => {
             const card = document.createElement('div');
             card.className = 'dev-card';
+            card.dataset.id = dev.id;
             card.innerHTML = `
-                <div class="avatar">${dev.avatar}</div>
-                <div class="nick">${dev.name}</div>
-                <div class="role">${dev.role}</div>
-                <div class="status">● активен</div>
-            `;
-            card.addEventListener('click', () => openModal(dev));
+                        <div class="avatar">${dev.avatar}</div>
+                        <div class="nick">${dev.name}</div>
+                        <div class="role">${dev.role}</div>
+                        <div class="status">● активен</div>
+                    `;
+            card.addEventListener('click', () => openModal(dev.id));
             grid.appendChild(card);
         });
 
@@ -853,7 +1051,9 @@
         const modal = document.getElementById('devModal');
         const modalClose = document.getElementById('modalClose');
 
-        function openModal(dev) {
+        function openModal(id) {
+            const dev = developers.find(d => d.id === id);
+            if (!dev) return;
             document.getElementById('modalAvatar').textContent = dev.avatar;
             document.getElementById('modalName').textContent = dev.name;
             document.getElementById('modalRole').textContent = dev.role;
@@ -875,17 +1075,37 @@
         });
 
         // ============================
-        // НАВИГАЦИЯ
+        // НАВИГАЦИЯ (ВКЛАДКИ)
         // ============================
-        document.querySelectorAll('#mainNav button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('#mainNav button').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const pageId = btn.dataset.page;
+        document.querySelectorAll('#mainNav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.dataset.page;
+                // Обновляем URL (без перезагрузки)
+                history.pushState(null, '', `#${pageId}`);
+                // Активируем ссылку
+                document.querySelectorAll('#mainNav a').forEach(a => a.classList.remove('active'));
+                link.classList.add('active');
+                // Показываем страницу
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                 const targetPage = document.getElementById(`page-${pageId}`);
                 if (targetPage) targetPage.classList.add('active');
             });
+        });
+
+        // ============================
+        // ОБРАБОТКА URL ПРИ ЗАГРУЗКЕ
+        // ============================
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.replace('#', '') || 'news';
+            const link = document.querySelector(`#mainNav a[data-page="${hash}"]`);
+            if (link) {
+                document.querySelectorAll('#mainNav a').forEach(a => a.classList.remove('active'));
+                link.classList.add('active');
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                const targetPage = document.getElementById(`page-${hash}`);
+                if (targetPage) targetPage.classList.add('active');
+            }
         });
 
         // ============================
@@ -909,7 +1129,8 @@
             const line = terminalLines[terminalIndex % terminalLines.length];
             const div = document.createElement('div');
             div.className = 'line';
-            div.innerHTML = `<span class="time">${line.time}</span> ${line.highlight ? '<span class="highlight">' + line.text + '</span>' : line.text}`;
+            div.innerHTML =
+                `<span class="time">${line.time}</span> ${line.highlight ? '<span class="highlight">' + line.text + '</span>' : line.text}`;
             terminal.appendChild(div);
             while (terminal.children.length > 12) {
                 terminal.removeChild(terminal.firstChild);
@@ -949,7 +1170,7 @@
             const message =
                 `📦 НОВЫЙ ЗАКАЗ\n\n👤 Имя: ${name}\n📱 Контакт: ${contact}\n🛒 Товар: ${product}\n💬 Комментарий: ${comment}`;
             const ok = await sendToTelegram(message);
-            alert(ok ? '✅ Заявка отправлена!' : '❌ Ошибка. Попробуй позже.');
+            alert(ok ? '✅ Заявка отправлена! Мы свяжемся с тобой.' : '❌ Ошибка отправки. Попробуй позже.');
             if (ok) e.target.reset();
         });
 
@@ -962,7 +1183,7 @@
             const message =
                 `🤝 НОВАЯ ЗАЯВКА В КОМАНДУ\n\n👤 Имя: ${name}\n📱 Telegram: ${tg}\n📌 Направление: ${direction}\n📝 Опыт: ${exp}`;
             const ok = await sendToTelegram(message);
-            alert(ok ? '🚀 Заявка отправлена!' : '❌ Ошибка. Попробуй позже.');
+            alert(ok ? '🚀 Заявка отправлена! Мы рассмотрим её.' : '❌ Ошибка отправки. Попробуй позже.');
             if (ok) e.target.reset();
         });
     </script>
